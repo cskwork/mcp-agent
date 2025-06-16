@@ -1,0 +1,29 @@
+name: "CustomerSupportAgent"
+llm:
+  provider: "anthropic"
+  model_name: "claude-3-5-sonnet-20241022"
+
+mcp_servers:
+  slack:
+    command: "mcp-server-slack"
+    args: ["--slack-bot-token", "${SLACK_BOT_TOKEN}"]
+    
+  zendesk:
+    command: "mcp-server-zendesk"
+    args: ["--api-token", "${ZENDESK_API_TOKEN}", "--subdomain", "${ZENDESK_SUBDOMAIN}"]
+    
+  database:
+    command: "mcp-server-postgres"
+    args: ["--connection-string", "${DATABASE_URL}"]
+    
+  filesystem:
+    command: "npx"
+    args: ["-y", "@modelcontextprotocol/server-filesystem", "${KNOWLEDGE_BASE_DIR}"]
+    
+  gmail:
+    command: "mcp-server-gmail"
+    args: ["--credentials", "${GMAIL_CREDENTIALS}"]
+    
+  shopify:
+    command: "mcp-server-shopify"
+    args: ["--api-key", "${SHOPIFY_API_KEY}", "--shop", "${SHOPIFY_SHOP}"]

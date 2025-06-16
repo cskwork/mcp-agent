@@ -1,0 +1,41 @@
+name: "InfrastructureDevOpsAgent"
+llm:
+  provider: "anthropic"
+  model_name: "claude-3-5-sonnet-20241022"
+
+mcp_servers:
+  aws:
+    command: "mcp-server-aws"
+    args: ["--region", "us-east-1", "--profile", "default"]
+    
+  kubernetes:
+    command: "mcp-server-kubernetes"
+    args: ["--kubeconfig", "${KUBECONFIG}"]
+    
+  prometheus:
+    command: "mcp-server-prometheus"
+    args: ["--prometheus-url", "${PROMETHEUS_URL}"]
+    
+  grafana:
+    command: "mcp-server-grafana"
+    args: ["--grafana-url", "${GRAFANA_URL}", "--api-key", "${GRAFANA_API_KEY}"]
+    
+  github:
+    command: "mcp-server-github"
+    args: ["--github-personal-access-token", "${GITHUB_TOKEN}"]
+    
+  pagerduty:
+    command: "mcp-server-pagerduty"
+    args: ["--api-key", "${PAGERDUTY_API_KEY}"]
+    
+  docker:
+    command: "mcp-server-docker"
+    args: ["--docker-host", "${DOCKER_HOST}"]
+    
+  slack:
+    command: "mcp-server-slack"
+    args: ["--slack-bot-token", "${SLACK_BOT_TOKEN}"]
+    
+  database:
+    command: "mcp-server-postgres"
+    args: ["--connection-string", "${DATABASE_URL}"]

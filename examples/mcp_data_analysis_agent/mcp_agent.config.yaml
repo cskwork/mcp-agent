@@ -1,0 +1,17 @@
+name: "DataAnalysisAgent"
+llm:
+  provider: "anthropic"
+  model_name: "claude-3-5-sonnet-20241022"
+  
+mcp_servers:
+  filesystem:
+    command: "npx"
+    args: ["-y", "@modelcontextprotocol/server-filesystem", "/path/to/data"]
+  
+  database:
+    command: "mcp-server-postgres" 
+    args: ["--connection-string", "postgresql://user:pass@localhost/db"]
+    
+  web_scraper:
+    command: "mcp-server-brave-search"
+    args: ["--api-key", "${BRAVE_API_KEY}"]

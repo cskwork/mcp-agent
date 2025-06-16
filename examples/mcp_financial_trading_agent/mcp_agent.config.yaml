@@ -1,0 +1,33 @@
+name: "FinancialTradingAgent"
+llm:
+  provider: "anthropic"
+  model_name: "claude-3-5-sonnet-20241022"
+
+mcp_servers:
+  alpha_vantage:
+    command: "mcp-server-alpha-vantage"
+    args: ["--api-key", "${ALPHA_VANTAGE_API_KEY}"]
+    
+  polygon:
+    command: "mcp-server-polygon"
+    args: ["--api-key", "${POLYGON_API_KEY}"]
+    
+  trading_platform:
+    command: "mcp-server-alpaca"
+    args: ["--api-key", "${ALPACA_API_KEY}", "--secret", "${ALPACA_SECRET}", "--paper"]
+    
+  database:
+    command: "mcp-server-postgres"
+    args: ["--connection-string", "${DATABASE_URL}"]
+    
+  news_api:
+    command: "mcp-server-news"
+    args: ["--api-key", "${NEWS_API_KEY}"]
+    
+  filesystem:
+    command: "npx"
+    args: ["-y", "@modelcontextprotocol/server-filesystem", "${TRADING_DATA_DIR}"]
+    
+  slack:
+    command: "mcp-server-slack"
+    args: ["--slack-bot-token", "${SLACK_BOT_TOKEN}"]

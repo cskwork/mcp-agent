@@ -1,0 +1,41 @@
+name: "PersonalProductivityAgent"
+llm:
+  provider: "anthropic"
+  model_name: "claude-3-5-sonnet-20241022"
+
+mcp_servers:
+  google_calendar:
+    command: "mcp-server-google-calendar"
+    args: ["--credentials", "${GOOGLE_CREDENTIALS}"]
+    
+  gmail:
+    command: "mcp-server-gmail"
+    args: ["--credentials", "${GMAIL_CREDENTIALS}"]
+    
+  notion:
+    command: "mcp-server-notion"
+    args: ["--notion-api-key", "${NOTION_API_KEY}"]
+    
+  todoist:
+    command: "mcp-server-todoist"
+    args: ["--api-token", "${TODOIST_API_TOKEN}"]
+    
+  slack:
+    command: "mcp-server-slack"
+    args: ["--slack-bot-token", "${SLACK_BOT_TOKEN}"]
+    
+  github:
+    command: "mcp-server-github"
+    args: ["--github-personal-access-token", "${GITHUB_TOKEN}"]
+    
+  trello:
+    command: "mcp-server-trello"
+    args: ["--api-key", "${TRELLO_API_KEY}", "--token", "${TRELLO_TOKEN}"]
+    
+  filesystem:
+    command: "npx"
+    args: ["-y", "@modelcontextprotocol/server-filesystem", "${DOCUMENTS_DIR}"]
+    
+  database:
+    command: "mcp-server-sqlite"
+    args: ["--db-path", "${PRODUCTIVITY_DB}"]

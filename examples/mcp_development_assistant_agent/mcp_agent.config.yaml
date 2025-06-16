@@ -1,0 +1,21 @@
+name: "DevAssistant"
+llm:
+  provider: "anthropic"
+  model_name: "claude-3-5-sonnet-20241022"
+
+mcp_servers:
+  github:
+    command: "mcp-server-github"
+    args: ["--github-personal-access-token", "${GITHUB_TOKEN}"]
+    
+  filesystem:
+    command: "npx"
+    args: ["-y", "@modelcontextprotocol/server-filesystem", "${PROJECT_ROOT}"]
+    
+  git:
+    command: "mcp-server-git"
+    args: ["--repository", "${PROJECT_ROOT}"]
+    
+  slack:
+    command: "mcp-server-slack"
+    args: ["--slack-bot-token", "${SLACK_BOT_TOKEN}"]

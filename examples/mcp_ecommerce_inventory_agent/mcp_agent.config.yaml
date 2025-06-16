@@ -1,0 +1,41 @@
+name: "EcommerceInventoryAgent"
+llm:
+  provider: "anthropic"
+  model_name: "claude-3-5-sonnet-20241022"
+
+mcp_servers:
+  shopify:
+    command: "mcp-server-shopify"
+    args: ["--api-key", "${SHOPIFY_API_KEY}", "--shop", "${SHOPIFY_SHOP}"]
+    
+  amazon:
+    command: "mcp-server-amazon-sp"
+    args: ["--access-key", "${AMAZON_ACCESS_KEY}", "--secret-key", "${AMAZON_SECRET_KEY}"]
+    
+  database:
+    command: "mcp-server-postgres"
+    args: ["--connection-string", "${DATABASE_URL}"]
+    
+  stripe:
+    command: "mcp-server-stripe"
+    args: ["--api-key", "${STRIPE_API_KEY}"]
+    
+  shipstation:
+    command: "mcp-server-shipstation"
+    args: ["--api-key", "${SHIPSTATION_API_KEY}", "--secret", "${SHIPSTATION_SECRET}"]
+    
+  gmail:
+    command: "mcp-server-gmail"
+    args: ["--credentials", "${GMAIL_CREDENTIALS}"]
+    
+  slack:
+    command: "mcp-server-slack"
+    args: ["--slack-bot-token", "${SLACK_BOT_TOKEN}"]
+    
+  google_sheets:
+    command: "mcp-server-google-sheets"
+    args: ["--credentials", "${GOOGLE_CREDENTIALS}"]
+    
+  filesystem:
+    command: "npx"
+    args: ["-y", "@modelcontextprotocol/server-filesystem", "${INVENTORY_DATA_DIR}"]
