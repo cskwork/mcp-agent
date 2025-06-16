@@ -1,0 +1,46 @@
+$schema: ../../schema/mcp-agent.config.schema.json
+
+execution_engine: asyncio
+logger:
+  transports: [console, file]
+  level: debug
+  show_progress: true
+  path_settings:
+    path_pattern: "logs/cybersecurity-threat-{unique_id}.jsonl"
+    unique_id: "timestamp"
+    timestamp_format: "%Y%m%d_%H%M%S"
+
+mcp:
+  servers:
+    fetch:
+      command: "uvx"
+      args: ["mcp-server-fetch"]
+    filesystem:
+      command: "npx"
+      args: ["-y", "@modelcontextprotocol/server-filesystem"]
+    postgres:
+      command: "uvx"
+      args: ["mcp-server-postgres", "--connection-string"]
+      env:
+        DATABASE_URL: "postgresql://security_user:password@localhost:5432/threat_intelligence_db"
+    threat_feeds:
+      command: "uvx"
+      args: ["mcp-server-threat-feeds"]
+    vulnerability_scanner:
+      command: "uvx"
+      args: ["mcp-server-vulnerability-scanner"]
+    siem:
+      command: "uvx"
+      args: ["mcp-server-siem"]
+    malware_analysis:
+      command: "uvx"
+      args: ["mcp-server-malware-analysis"]
+    dark_web:
+      command: "uvx"
+      args: ["mcp-server-dark-web-monitoring"]
+    network_monitoring:
+      command: "uvx"
+      args: ["mcp-server-network-monitoring"]
+    
+anthropic:
+  default_model: "claude-3-5-sonnet-20241022"

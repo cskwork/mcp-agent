@@ -1,0 +1,40 @@
+$schema: ../../schema/mcp-agent.config.schema.json
+
+execution_engine: asyncio
+logger:
+  transports: [console, file]
+  level: debug
+  show_progress: true
+  path_settings:
+    path_pattern: "logs/smart-city-{unique_id}.jsonl"
+    unique_id: "timestamp"
+    timestamp_format: "%Y%m%d_%H%M%S"
+
+mcp:
+  servers:
+    fetch:
+      command: "uvx"
+      args: ["mcp-server-fetch"]
+    filesystem:
+      command: "npx"
+      args: ["-y", "@modelcontextprotocol/server-filesystem"]
+    postgres:
+      command: "uvx"
+      args: ["mcp-server-postgres", "--connection-string"]
+      env:
+        DATABASE_URL: "postgresql://city_user:password@localhost:5432/smart_city_db"
+    iot_sensors:
+      command: "uvx"
+      args: ["mcp-server-iot-sensors"]
+    weather:
+      command: "uvx"
+      args: ["mcp-server-weather"]
+    gis:
+      command: "uvx"
+      args: ["mcp-server-gis"]
+    notifications:
+      command: "uvx"
+      args: ["mcp-server-notifications"]
+    
+anthropic:
+  default_model: "claude-3-5-sonnet-20241022"

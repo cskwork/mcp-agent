@@ -1,0 +1,15 @@
+# Core framework dependency
+mcp-agent @ file://../../  # Link to the local mcp-agent project root
+
+# Additional dependencies for precision farming
+anthropic
+psycopg2-binary
+pandas
+numpy
+matplotlib
+seaborn
+geopandas
+rasterio
+scikit-learn
+opencv-python
+pillow

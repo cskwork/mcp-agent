@@ -1,0 +1,86 @@
+name: "meeting-assistant-agent"
+description: "AI-powered meeting assistant for scheduling, preparation, note-taking, and follow-ups"
+
+# LLM Configuration
+llm:
+  provider: "anthropic"
+  model: "claude-3-5-sonnet-latest"
+  temperature: 0.1
+  max_tokens: 4096
+
+# MCP Server Configuration
+mcp_servers:
+  # Calendar management
+  calendar:
+    command: "npx"
+    args: ["@modelcontextprotocol/server-calendar"]
+    env: {}
+  
+  # File system operations
+  filesystem:
+    command: "npx"
+    args: ["@modelcontextprotocol/server-filesystem", "/tmp/meetings"]
+    env: {}
+  
+  # Email integration
+  email:
+    command: "npx" 
+    args: ["@modelcontextprotocol/server-gmail"]
+    env: {}
+  
+  # Web search for meeting research
+  brave_search:
+    command: "npx"
+    args: ["@modelcontextprotocol/server-brave-search"]
+    env: {}
+  
+  # Note-taking and document management
+  notion:
+    command: "npx"
+    args: ["@modelcontextprotocol/server-notion"]
+    env: {}
+
+# Agent Configuration
+agent:
+  name: "MeetingAssistant"
+  description: "Comprehensive meeting lifecycle management"
+  capabilities:
+    - "meeting_scheduling"
+    - "agenda_preparation" 
+    - "note_taking"
+    - "action_item_tracking"
+    - "meeting_insights"
+    - "calendar_integration"
+    - "email_notifications"
+    - "document_management"
+  
+  # Meeting-specific settings
+  settings:
+    default_meeting_duration: 60  # minutes
+    reminder_intervals: [1440, 60, 15]  # minutes before meeting
+    auto_transcription: true
+    action_item_tracking: true
+    insight_generation: true
+    
+  # File organization
+  file_structure:
+    base_path: "/tmp/meetings"
+    folders:
+      - "agendas"
+      - "notes" 
+      - "recordings"
+      - "action_items"
+      - "insights"
+
+# Logging Configuration
+logging:
+  level: "INFO"
+  format: "structured"
+  handlers:
+    - "console"
+    - "file"
+  
+  file_config:
+    path: "logs/meeting_assistant.log"
+    max_size: "10MB"
+    backup_count: 5

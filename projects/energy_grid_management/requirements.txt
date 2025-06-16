@@ -1,0 +1,24 @@
+# Core framework dependency
+mcp-agent @ file://../../  # Link to the local mcp-agent project root
+
+# Additional dependencies for energy grid management
+anthropic
+psycopg2-binary
+pandas
+numpy
+scipy
+matplotlib
+seaborn
+plotly
+scikit-learn
+tensorflow
+torch
+pyomo
+cvxpy
+networkx
+PyQt5
+dash
+streamlit
+modbus-tk
+dnp3-python
+opcua

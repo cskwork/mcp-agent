@@ -1,0 +1,40 @@
+name: "knowledge-management-agent"
+description: "AI-powered knowledge capture, organization, and retrieval system"
+
+llm:
+  provider: "anthropic"
+  model: "claude-3-5-sonnet-latest"
+  temperature: 0.1
+  max_tokens: 4096
+
+mcp_servers:
+  filesystem:
+    command: "npx"
+    args: ["@modelcontextprotocol/server-filesystem", "/tmp/knowledge"]
+    env: {}
+  
+  qdrant:
+    command: "npx"
+    args: ["@modelcontextprotocol/server-qdrant"]
+    env: {}
+  
+  brave_search:
+    command: "npx"
+    args: ["@modelcontextprotocol/server-brave-search"]
+    env: {}
+  
+  notion:
+    command: "npx"
+    args: ["@modelcontextprotocol/server-notion"]
+    env: {}
+
+agent:
+  name: "KnowledgeManager"
+  description: "Comprehensive knowledge management and retrieval"
+  capabilities:
+    - "knowledge_capture"
+    - "document_processing"
+    - "semantic_search"
+    - "quality_maintenance"
+    - "usage_analytics"
+    - "expert_identification"

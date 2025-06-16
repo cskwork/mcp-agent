@@ -1,0 +1,49 @@
+$schema: ../../schema/mcp-agent.config.schema.json
+
+execution_engine: asyncio
+logger:
+  transports: [console, file]
+  level: debug
+  show_progress: true
+  path_settings:
+    path_pattern: "logs/educational-curriculum-{unique_id}.jsonl"
+    unique_id: "timestamp"
+    timestamp_format: "%Y%m%d_%H%M%S"
+
+mcp:
+  servers:
+    fetch:
+      command: "uvx"
+      args: ["mcp-server-fetch"]
+    filesystem:
+      command: "npx"
+      args: ["-y", "@modelcontextprotocol/server-filesystem"]
+    postgres:
+      command: "uvx"
+      args: ["mcp-server-postgres", "--connection-string"]
+      env:
+        DATABASE_URL: "postgresql://edu_user:password@localhost:5432/educational_curriculum_db"
+    learning_analytics:
+      command: "uvx"
+      args: ["mcp-server-learning-analytics"]
+    content_library:
+      command: "uvx"
+      args: ["mcp-server-content-library"]
+    assessment_engine:
+      command: "uvx"
+      args: ["mcp-server-assessment-engine"]
+    student_information:
+      command: "uvx"
+      args: ["mcp-server-student-information"]
+    curriculum_standards:
+      command: "uvx"
+      args: ["mcp-server-curriculum-standards"]
+    adaptive_learning:
+      command: "uvx"
+      args: ["mcp-server-adaptive-learning"]
+    plagiarism_detection:
+      command: "uvx"
+      args: ["mcp-server-plagiarism-detection"]
+    
+anthropic:
+  default_model: "claude-3-5-sonnet-20241022"

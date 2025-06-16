@@ -1,0 +1,139 @@
+name: "document-workflow-agent"
+description: "AI-powered document lifecycle management with review workflows and approval processes"
+
+# LLM Configuration
+llm:
+  provider: "anthropic"
+  model: "claude-3-5-sonnet-latest"
+  temperature: 0.2
+  max_tokens: 4096
+
+# MCP Server Configuration
+mcp_servers:
+  # File system operations
+  filesystem:
+    command: "npx"
+    args: ["@modelcontextprotocol/server-filesystem", "/tmp/documents"]
+    env: {}
+  
+  # Web search for research
+  brave_search:
+    command: "npx"
+    args: ["@modelcontextprotocol/server-brave-search"]
+    env: {}
+  
+  # Email for notifications
+  email:
+    command: "npx"
+    args: ["@modelcontextprotocol/server-gmail"]
+    env: {}
+  
+  # Google Docs integration
+  google_docs:
+    command: "npx"
+    args: ["@modelcontextprotocol/server-gdocs"]
+    env: {}
+  
+  # Microsoft Word integration
+  office365:
+    command: "npx"
+    args: ["@modelcontextprotocol/server-office365"]
+    env: {}
+  
+  # PDF operations
+  pdf:
+    command: "npx"
+    args: ["@modelcontextprotocol/server-pdf"]
+    env: {}
+  
+  # Version control
+  git:
+    command: "npx"
+    args: ["@modelcontextprotocol/server-git", "/tmp/documents"]
+    env: {}
+
+# Agent Configuration
+agent:
+  name: "DocumentWorkflow"
+  description: "Comprehensive document lifecycle management"
+  capabilities:
+    - "document_creation"
+    - "content_research"
+    - "review_workflow_setup"
+    - "feedback_processing"
+    - "approval_routing"
+    - "version_control"
+    - "distribution_automation"
+    - "analytics_generation"
+  
+  # Document workflow settings
+  settings:
+    default_review_period: 5  # days
+    auto_reminder_interval: 24  # hours
+    max_revision_cycles: 3
+    require_approval_for_publish: true
+    auto_archive_after_days: 365
+    
+  # Document templates
+  templates:
+    proposal: "templates/proposal_template.docx"
+    report: "templates/report_template.docx"
+    contract: "templates/contract_template.docx"
+    policy: "templates/policy_template.docx"
+    manual: "templates/manual_template.docx"
+    presentation: "templates/presentation_template.pptx"
+    memo: "templates/memo_template.docx"
+    specification: "templates/spec_template.docx"
+  
+  # File organization
+  file_structure:
+    base_path: "/tmp/documents"
+    folders:
+      - "drafts"
+      - "reviews"
+      - "approved"
+      - "published"
+      - "archived"
+      - "templates"
+      - "analytics"
+
+# Workflow Configuration
+workflows:
+  review_process:
+    stages:
+      - "content_review"
+      - "technical_review"
+      - "legal_review"
+      - "final_approval"
+    
+    escalation:
+      delay_hours: 48
+      escalation_chain: ["manager", "director", "vp"]
+  
+  approval_matrix:
+    memo: ["direct_manager"]
+    proposal: ["manager", "director"]
+    contract: ["legal", "finance", "executive"]
+    policy: ["compliance", "legal", "executive"]
+
+# Logging Configuration
+logging:
+  level: "INFO"
+  format: "structured"
+  handlers:
+    - "console"
+    - "file"
+  
+  file_config:
+    path: "logs/document_workflow.log"
+    max_size: "10MB"
+    backup_count: 5
+  
+  # Track document events
+  document_events:
+    - "created"
+    - "modified"
+    - "reviewed"
+    - "approved"
+    - "published"
+    - "archived"

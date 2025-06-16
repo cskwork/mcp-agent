@@ -1,0 +1,23 @@
+name: "routine-optimization-agent"
+description: "AI-powered productivity agent"
+
+llm:
+  provider: "anthropic"
+  model: "claude-3-5-sonnet-latest"
+  temperature: 0.2
+  max_tokens: 4096
+
+mcp_servers:
+  filesystem:
+    command: "npx"
+    args: ["@modelcontextprotocol/server-filesystem", "/tmp/routine_optimization_agent"]
+    env: {}
+  
+  brave_search:
+    command: "npx"
+    args: ["@modelcontextprotocol/server-brave-search"]
+    env: {}
+
+agent:
+  name: "Routine Optimization Agent"
+  description: "Comprehensive productivity management"

@@ -1,0 +1,28 @@
+# Core framework dependency
+mcp-agent @ file://../../  # Link to the local mcp-agent project root
+
+# Additional dependencies for cybersecurity threat intelligence
+anthropic
+psycopg2-binary
+pandas
+numpy
+scikit-learn
+requests
+shodan
+virustotal3
+pymisp
+stix2
+taxii2-client
+yara-python
+pefile
+python-magic
+scapy
+nmap
+impacket
+cryptography
+hashlib
+ipaddress
+dns
+whois
+elasticsearch
+splunk-sdk

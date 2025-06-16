@@ -1,0 +1,22 @@
+# Core framework dependency
+mcp-agent @ file://../../  # Link to the local mcp-agent project root
+
+# Additional dependencies for legal document analysis
+anthropic
+psycopg2-binary
+pandas
+numpy
+nltk
+spacy
+transformers
+torch
+PyPDF2
+python-docx
+openpyxl
+beautifulsoup4
+requests
+lxml
+textract
+fitz  # PyMuPDF
+langchain
+sentence-transformers

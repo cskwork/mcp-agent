@@ -1,0 +1,26 @@
+# Core framework dependency
+mcp-agent @ file://../../  # Link to the local mcp-agent project root
+
+# Additional dependencies for real estate investment
+anthropic
+psycopg2-binary
+pandas
+numpy
+scipy
+matplotlib
+seaborn
+plotly
+scikit-learn
+requests
+beautifulsoup4
+geopy
+folium
+geopandas
+shapely
+fiona
+pyproj
+xlsxwriter
+openpyxl
+python-docx
+icalendar
+schedule

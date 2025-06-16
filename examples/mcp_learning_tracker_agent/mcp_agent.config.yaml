@@ -1,0 +1,23 @@
+name: "$(echo $dir  < /dev/null |  sed 's/mcp_//' | sed 's/_/-/g')"
+description: "AI-powered productivity agent"
+
+llm:
+  provider: "anthropic"
+  model: "claude-3-5-sonnet-latest"
+  temperature: 0.2
+  max_tokens: 4096
+
+mcp_servers:
+  filesystem:
+    command: "npx"
+    args: ["@modelcontextprotocol/server-filesystem", "/tmp/$(echo $dir | sed 's/mcp_//')"]
+    env: {}
+  
+  brave_search:
+    command: "npx"
+    args: ["@modelcontextprotocol/server-brave-search"]
+    env: {}
+
+agent:
+  name: "$(echo $dir | sed 's/mcp_//' | sed 's/_/ /g' | sed 's/\b\w/\U&/g')"
+  description: "Comprehensive productivity management"

@@ -1,0 +1,23 @@
+name: "goal-achievement-agent"
+description: "AI-powered productivity agent"
+
+llm:
+  provider: "anthropic"
+  model: "claude-3-5-sonnet-latest"
+  temperature: 0.2
+  max_tokens: 4096
+
+mcp_servers:
+  filesystem:
+    command: "npx"
+    args: ["@modelcontextprotocol/server-filesystem", "/tmp/goal_achievement_agent"]
+    env: {}
+  
+  brave_search:
+    command: "npx"
+    args: ["@modelcontextprotocol/server-brave-search"]
+    env: {}
+
+agent:
+  name: "Goal Achievement Agent"
+  description: "Comprehensive productivity management"

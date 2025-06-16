@@ -1,0 +1,14 @@
+# Core framework dependency
+mcp-agent @ file://../../  # Link to the local mcp-agent project root
+
+# Additional dependencies for medical research
+anthropic
+psycopg2-binary
+pandas
+numpy
+scipy
+matplotlib
+seaborn
+biopython
+pubmed-parser
+xmltodict

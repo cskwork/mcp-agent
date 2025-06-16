@@ -1,0 +1,49 @@
+$schema: ../../schema/mcp-agent.config.schema.json
+
+execution_engine: asyncio
+logger:
+  transports: [console, file]
+  level: debug
+  show_progress: true
+  path_settings:
+    path_pattern: "logs/real-estate-{unique_id}.jsonl"
+    unique_id: "timestamp"
+    timestamp_format: "%Y%m%d_%H%M%S"
+
+mcp:
+  servers:
+    fetch:
+      command: "uvx"
+      args: ["mcp-server-fetch"]
+    filesystem:
+      command: "npx"
+      args: ["-y", "@modelcontextprotocol/server-filesystem"]
+    postgres:
+      command: "uvx"
+      args: ["mcp-server-postgres", "--connection-string"]
+      env:
+        DATABASE_URL: "postgresql://realestate_user:password@localhost:5432/real_estate_db"
+    mls:
+      command: "uvx"
+      args: ["mcp-server-mls"]
+    property_analytics:
+      command: "uvx"
+      args: ["mcp-server-property-analytics"]
+    market_data:
+      command: "uvx"
+      args: ["mcp-server-market-data"]
+    mortgage_calculator:
+      command: "uvx"
+      args: ["mcp-server-mortgage-calculator"]
+    property_valuation:
+      command: "uvx"
+      args: ["mcp-server-property-valuation"]
+    demographics:
+      command: "uvx"
+      args: ["mcp-server-demographics"]
+    gis:
+      command: "uvx"
+      args: ["mcp-server-gis"]
+    
+anthropic:
+  default_model: "claude-3-5-sonnet-20241022"

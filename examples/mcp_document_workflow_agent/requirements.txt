@@ -1,0 +1,6 @@
+mcp-agent>=0.1.0
+anthropic>=0.40.0
+python-docx>=1.1.0
+openpyxl>=3.1.2
+PyPDF2>=3.0.1
+gitpython>=3.1.40

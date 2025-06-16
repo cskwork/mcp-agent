@@ -1,0 +1,46 @@
+$schema: ../../schema/mcp-agent.config.schema.json
+
+execution_engine: asyncio
+logger:
+  transports: [console, file]
+  level: debug
+  show_progress: true
+  path_settings:
+    path_pattern: "logs/energy-grid-{unique_id}.jsonl"
+    unique_id: "timestamp"
+    timestamp_format: "%Y%m%d_%H%M%S"
+
+mcp:
+  servers:
+    fetch:
+      command: "uvx"
+      args: ["mcp-server-fetch"]
+    filesystem:
+      command: "npx"
+      args: ["-y", "@modelcontextprotocol/server-filesystem"]
+    postgres:
+      command: "uvx"
+      args: ["mcp-server-postgres", "--connection-string"]
+      env:
+        DATABASE_URL: "postgresql://energy_user:password@localhost:5432/energy_grid_db"
+    scada:
+      command: "uvx"
+      args: ["mcp-server-scada"]
+    weather:
+      command: "uvx"
+      args: ["mcp-server-weather"]
+    renewable_energy:
+      command: "uvx"
+      args: ["mcp-server-renewable-energy"]
+    grid_analytics:
+      command: "uvx"
+      args: ["mcp-server-grid-analytics"]
+    smart_meters:
+      command: "uvx"
+      args: ["mcp-server-smart-meters"]
+    energy_market:
+      command: "uvx"
+      args: ["mcp-server-energy-market"]
+    
+anthropic:
+  default_model: "claude-3-5-sonnet-20241022"

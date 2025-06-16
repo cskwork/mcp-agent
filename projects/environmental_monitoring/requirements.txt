@@ -1,0 +1,28 @@
+# Core framework dependency
+mcp-agent @ file://../../  # Link to the local mcp-agent project root
+
+# Additional dependencies for environmental monitoring
+anthropic
+psycopg2-binary
+pandas
+numpy
+scipy
+matplotlib
+seaborn
+plotly
+scikit-learn
+xarray
+netcdf4
+rasterio
+geopandas
+shapely
+fiona
+folium
+requests
+beautifulsoup4
+Pillow
+opencv-python
+satellite-image-deep-learning
+earthengine-api
+paho-mqtt
+influxdb-client

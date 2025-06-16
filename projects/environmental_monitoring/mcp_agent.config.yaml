@@ -1,0 +1,52 @@
+$schema: ../../schema/mcp-agent.config.schema.json
+
+execution_engine: asyncio
+logger:
+  transports: [console, file]
+  level: debug
+  show_progress: true
+  path_settings:
+    path_pattern: "logs/environmental-monitoring-{unique_id}.jsonl"
+    unique_id: "timestamp"
+    timestamp_format: "%Y%m%d_%H%M%S"
+
+mcp:
+  servers:
+    fetch:
+      command: "uvx"
+      args: ["mcp-server-fetch"]
+    filesystem:
+      command: "npx"
+      args: ["-y", "@modelcontextprotocol/server-filesystem"]
+    postgres:
+      command: "uvx"
+      args: ["mcp-server-postgres", "--connection-string"]
+      env:
+        DATABASE_URL: "postgresql://env_user:password@localhost:5432/environmental_monitoring_db"
+    weather:
+      command: "uvx"
+      args: ["mcp-server-weather"]
+    air_quality:
+      command: "uvx"
+      args: ["mcp-server-air-quality"]
+    water_quality:
+      command: "uvx"
+      args: ["mcp-server-water-quality"]
+    satellite_imagery:
+      command: "uvx"
+      args: ["mcp-server-satellite-imagery"]
+    iot_sensors:
+      command: "uvx"
+      args: ["mcp-server-iot-sensors"]
+    climate_data:
+      command: "uvx"
+      args: ["mcp-server-climate-data"]
+    wildlife_tracking:
+      command: "uvx"
+      args: ["mcp-server-wildlife-tracking"]
+    pollution_monitoring:
+      command: "uvx"
+      args: ["mcp-server-pollution-monitoring"]
+    
+anthropic:
+  default_model: "claude-3-5-sonnet-20241022"

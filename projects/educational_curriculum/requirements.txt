@@ -1,0 +1,27 @@
+# Core framework dependency
+mcp-agent @ file://../../  # Link to the local mcp-agent project root
+
+# Additional dependencies for educational curriculum
+anthropic
+psycopg2-binary
+pandas
+numpy
+scipy
+matplotlib
+seaborn
+plotly
+scikit-learn
+nltk
+spacy
+transformers
+torch
+requests
+beautifulsoup4
+lxml
+python-docx
+openpyxl
+PyPDF2
+pillow
+canvasapi
+google-api-python-client
+oauth2client
