@@ -1,131 +1,164 @@
+#!/usr/bin/env python3
+"""
+간단한 대화형 에이전트 라우터 - 메인 프로그램
+Simple Interactive Agent Router - Main Program
+
+이 프로그램은 사용자 요청을 적절한 에이전트로 라우팅합니다.
+This program routes user requests to appropriate agents.
+"""
+
 import asyncio
-import os
+import sys
+from pathlib import Path
 
-from mcp_agent.app import MCPApp
-from mcp_agent.logging.logger import get_logger
-from mcp_agent.agents.agent import Agent
-from mcp_agent.workflows.router.router_llm_anthropic import AnthropicLLMRouter
-from mcp_agent.workflows.router.router_llm_openai import OpenAILLMRouter
+# 프로젝트 루트를 Python 경로에 추가 / Add project root to Python path
+project_root = Path(__file__).parent
+sys.path.insert(0, str(project_root))
 
-from rich import print
+from rich.console import Console
+from rich.panel import Panel
+from rich.prompt import Prompt, Confirm
 
-app = MCPApp(name="router")
-
-
-def print_to_console(message: str):
-    """
-    A simple function that prints a message to the console.
-    """
-    logger = get_logger("workflow_router.print_to_console")
-    logger.info(message)
+from src.routing.simple_router import SimpleRouter
+from src.utils.simple_config import SimpleConfig
 
 
-def print_hello_world():
-    """
-    A simple function that prints "Hello, world!" to the console.
-    """
-    print_to_console("Hello, world!")
+console = Console()
 
 
-async def example_usage():
-    async with app.run() as router_app:
-        logger = router_app.logger
-        context = router_app.context
-        logger.info("Current config:", data=context.config.model_dump())
+async def main():
+    """메인 프로그램 실행 / Run main program"""
+    
+    # 환영 메시지 출력 / Display welcome message
+    console.print(Panel.fit(
+        "[bold green]🚀 Interactive Modular Agent Router[/bold green]\n"
+        "간단하고 똑똑한 에이전트 라우터입니다!\n"
+        "Simple and smart agent router!",
+        title="Welcome",
+        border_style="green"
+    ))
+    
+    # 설정 확인 / Check configuration
+    config = SimpleConfig()
+    if not config.has_required_keys():
+        console.print(Panel(
+            "[red]⚠️  Anthropic API 키가 필요합니다![/red]\n"
+            "[red]⚠️  Anthropic API key required![/red]\n\n"
+            "mcp_agent.secrets.yaml 파일을 설정해주세요.\n"
+            "Please configure mcp_agent.secrets.yaml file.",
+            title="Configuration Required",
+            border_style="red"
+        ))
+        return
+    
+    # 라우터 초기화 / Initialize router
+    console.print("🔧 라우터 초기화 중... / Initializing router...")
+    router = SimpleRouter()
+    
+    # 메인 루프 / Main loop
+    while True:
+        try:
+            # 메뉴 표시 / Show menu
+            console.print(Panel.fit(
+                "[bold blue]메뉴 / Menu[/bold blue]\n\n"
+                "[green]1.[/green] 요청 처리 / Process Request\n"
+                "[green]2.[/green] 에이전트 목록 / List Agents\n"
+                "[green]3.[/green] 요청 분석 / Analyze Request\n"
+                "[green]4.[/green] 종료 / Exit",
+                title="Main Menu",
+                border_style="blue"
+            ))
+            
+            choice = Prompt.ask("선택 / Choice", choices=["1", "2", "3", "4"], default="1")
+            
+            if choice == "1":
+                await process_request(router)
+            elif choice == "2":
+                list_agents(router)
+            elif choice == "3":
+                analyze_request(router)
+            elif choice == "4":
+                console.print("[bold blue]👋 안녕히 가세요! / Goodbye![/bold blue]")
+                break
+            
+            if choice != "4":
+                if not Confirm.ask("계속하시겠습니까? / Continue?", default=True):
+                    console.print("[bold blue]👋 안녕히 가세요! / Goodbye![/bold blue]")
+                    break
+                    
+        except KeyboardInterrupt:
+            console.print("\n[yellow]⚠️  사용자가 중단했습니다. / Interrupted by user.[/yellow]")
+            break
+        except Exception as e:
+            console.print(f"[red]❌ 오류 / Error: {str(e)}[/red]")
 
-        # Add the current directory to the filesystem server's args
-        context.config.mcp.servers["filesystem"].args.extend([os.getcwd()])
 
-        finder_agent = Agent(
-            name="finder",
-            instruction="""You are an agent with access to the filesystem, 
-            as well as the ability to fetch URLs. Your job is to identify 
-            the closest match to a user's request, make the appropriate tool calls, 
-            and return the URI and CONTENTS of the closest match.""",
-            server_names=["fetch", "filesystem"],
-        )
+async def process_request(router):
+    """요청 처리 / Process request"""
+    console.print("\n[bold green]요청을 입력하세요 / Enter your request:[/bold green]")
+    console.print("[dim]예시 / Examples: 'search for docs', 'send slack message', 'scrape website'[/dim]")
+    
+    request = Prompt.ask("요청 / Request")
+    if not request.strip():
+        console.print("[red]유효한 요청을 입력해주세요. / Please enter a valid request.[/red]")
+        return
+    
+    console.print(f"\n[bold]처리 중 / Processing: '{request}'[/bold]")
+    
+    # 라우팅 수행 / Perform routing
+    agent_name, method = await router.route(request)
+    
+    if agent_name:
+        agent = router.get_agent(agent_name)
+        console.print(f"[bold green]✅ 라우팅 완료 / Routed to:[/bold green] {agent_name}")
+        console.print(f"[bold]방법 / Method:[/bold] {method}")
+        console.print(f"[bold]에이전트 / Agent:[/bold] {agent.name}")
+        
+        if Confirm.ask("이 에이전트로 실행하시겠습니까? / Execute with this agent?"):
+            console.print("[bold yellow]실행 중 / Executing...[/bold yellow]")
+            console.print("[bold green]✅ 실행 완료 (시뮬레이션) / Execution complete (simulated)[/bold green]")
+    else:
+        console.print("[red]❌ 적절한 에이전트를 찾을 수 없습니다. / No suitable agent found.[/red]")
 
-        writer_agent = Agent(
-            name="writer",
-            instruction="""You are an agent that can write to the filesystem.
-            You are tasked with taking the user's input, addressing it, and 
-            writing the result to disk in the appropriate location.""",
-            server_names=["filesystem"],
-        )
 
-        reasoning_agent = Agent(
-            name="writer",
-            instruction="""You are a generalist with knowledge about a vast
-            breadth of subjects. You are tasked with analyzing and reasoning over
-            the user's query and providing a thoughtful response.""",
-            server_names=[],
-        )
+def list_agents(router):
+    """에이전트 목록 표시 / List agents"""
+    agents = router.list_agents()
+    console.print(f"\n[bold blue]사용 가능한 에이전트 / Available Agents ({len(agents)}):[/bold blue]")
+    
+    for i, agent_name in enumerate(agents, 1):
+        agent = router.get_agent(agent_name)
+        console.print(f"[green]{i}.[/green] [bold]{agent_name}[/bold] - {agent.name}")
 
-        # You can use any LLM with an LLMRouter
-        router = OpenAILLMRouter(
-            agents=[finder_agent, writer_agent, reasoning_agent],
-            functions=[print_to_console, print_hello_world],
-        )
 
-        # This should route the query to finder agent, and also give an explanation of its decision
-        results = await router.route_to_agent(
-            request="Print the contents of mcp_agent.config.yaml verbatim", top_k=1
-        )
-        logger.info("Router Results:", data=results)
-
-        # We can use the agent returned by the router
-        agent = results[0].result
-        async with agent:
-            result = await agent.list_tools()
-            logger.info("Tools available:", data=result.model_dump())
-
-            result = await agent.call_tool(
-                name="read_file",
-                arguments={
-                    "path": str(os.path.join(os.getcwd(), "mcp_agent.config.yaml"))
-                },
-            )
-            logger.info("read_file result:", data=result.model_dump())
-
-        # We can also use a router already configured with a particular LLM
-        anthropic_router = AnthropicLLMRouter(
-            server_names=["fetch", "filesystem"],
-            agents=[finder_agent, writer_agent, reasoning_agent],
-            functions=[print_to_console, print_hello_world],
-        )
-
-        # This should route the query to print_to_console function
-        # Note that even though top_k is 2, it should only return print_to_console and not print_hello_world
-        results = await anthropic_router.route_to_function(
-            request="Print the input to console", top_k=2
-        )
-        logger.info("Router Results:", data=results)
-        function_to_call = results[0].result
-        function_to_call("Hello, world!")
-
-        # This should route the query to fetch MCP server (inferring just by the server name alone!)
-        # You can also specify a server description in mcp_agent.config.yaml to help the router make a more informed decision
-        results = await anthropic_router.route_to_server(
-            request="Print the first two paragraphs of https://modelcontextprotocol.io/introduction",
-            top_k=1,
-        )
-        logger.info("Router Results:", data=results)
-
-        # Using the 'route' function will return the top-k results across all categories the router was initialized with (servers, agents and callables)
-        # top_k = 3 should likely print: 1. filesystem server, 2. finder agent and possibly 3. print_to_console function
-        results = await anthropic_router.route(
-            request="Print the contents of mcp_agent.config.yaml verbatim",
-            top_k=3,
-        )
-        logger.info("Router Results:", data=results)
+def analyze_request(router):
+    """요청 분석 / Analyze request"""
+    console.print("\n[bold green]분석할 요청을 입력하세요 / Enter request to analyze:[/bold green]")
+    
+    request = Prompt.ask("요청 / Request")
+    if not request.strip():
+        console.print("[red]유효한 요청을 입력해주세요. / Please enter a valid request.[/red]")
+        return
+    
+    analysis = router.analyze(request)
+    
+    console.print(f"\n[bold blue]분석 결과 / Analysis Results:[/bold blue]")
+    console.print(f"[bold]요청 / Request:[/bold] {analysis['request']}")
+    console.print(f"[bold]추천 / Recommended:[/bold] {analysis['recommended'] or 'None'}")
+    console.print(f"[bold]방법 / Method:[/bold] {analysis['method']}")
+    
+    console.print(f"\n[bold]점수 / Scores:[/bold]")
+    for agent_name, data in analysis['scores'].items():
+        score = data['score']
+        matched = ', '.join(data['matched_keywords']) or 'None'
+        console.print(f"  {agent_name}: {score} (matched: {matched})")
 
 
 if __name__ == "__main__":
-    import time
-
-    start = time.time()
-    asyncio.run(example_usage())
-    end = time.time()
-    t = end - start
-
-    print(f"Total run time: {t:.2f}s")
+    try:
+        asyncio.run(main())
+    except KeyboardInterrupt:
+        print("\n프로그램이 중단되었습니다. / Program interrupted.")
+    except Exception as e:
+        print(f"치명적 오류 / Fatal error: {str(e)}")
+        sys.exit(1)
